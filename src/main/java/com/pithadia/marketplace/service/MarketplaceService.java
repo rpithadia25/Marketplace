@@ -139,7 +139,7 @@ public class MarketplaceService {
             return ResponseEntity.ok().body("Auction is still Active");
         }
 
-        Buyer buyer = project.getBuyer();
+        Buyer buyer = project.getBuyerWithMinBid();
 
         return ResponseEntity.ok().body("Buyer " + buyer.getFirstName() + " won the auction for a Bid of " + project.getLowestBid());
     }

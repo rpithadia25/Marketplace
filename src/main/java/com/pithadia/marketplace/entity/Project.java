@@ -22,7 +22,7 @@ public class Project {
     private Integer minBidIndex;
 
     @ManyToOne
-    private Buyer buyer;
+    private Buyer buyerWithMinBid;
 
     @ManyToOne
     private Seller seller;
@@ -90,12 +90,12 @@ public class Project {
         this.minBidIndex = minBidIndex;
     }
 
-    public Buyer getBuyer() {
-        return buyer;
+    public Buyer getBuyerWithMinBid() {
+        return buyerWithMinBid;
     }
 
-    public void setBuyer(Buyer buyer) {
-        this.buyer = buyer;
+    public void setBuyerWithMinBid(Buyer buyerWithMinBid) {
+        this.buyerWithMinBid = buyerWithMinBid;
     }
 
     public Seller getSeller() {
@@ -110,10 +110,10 @@ public class Project {
 
         if (bids.size() == 0) {
             minBidIndex = 0;
-            buyer = bid.getBuyer();
+            buyerWithMinBid = bid.getBuyer();
         } else if (bids.get(minBidIndex).getBidAmount().compareTo(bid.getBidAmount()) > 0) {
             minBidIndex++;
-            buyer = bid.getBuyer();
+            buyerWithMinBid = bid.getBuyer();
         }
         bids.add(bid);
     }
@@ -136,7 +136,7 @@ public class Project {
                 ", auctionEndDate=" + auctionEndDate +
                 ", maxBudget=" + maxBudget +
                 ", minBidIndex=" + minBidIndex +
-                ", buyer=" + buyer +
+                ", buyerWithMinBid=" + buyerWithMinBid +
                 ", seller=" + seller +
                 ", bids=" + bids +
                 '}';
