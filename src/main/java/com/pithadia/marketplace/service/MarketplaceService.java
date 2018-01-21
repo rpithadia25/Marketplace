@@ -16,16 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/marketplace")
 public class MarketplaceService {
 
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private SellerRepository sellerRepository;
@@ -38,6 +36,7 @@ public class MarketplaceService {
 
     @PostMapping(value = "project")
     public ResponseEntity<Project> createProject(@RequestBody ProjectRequest createProjectRequest) {
+
         Seller seller = sellerRepository.findOne(createProjectRequest.getSellerId());
 
         if (seller == null) {
@@ -66,22 +65,6 @@ public class MarketplaceService {
         }
 
         return project;
-    }
-
-    @GetMapping(value = "/projects")
-    public List<Project> getAllOpenProjects() {
-
-        List<Project> projects = new ArrayList<>();
-
-        Date currentDate = new Date();
-
-        for (Project project : projectRepository.findAll()) {
-            if (currentDate.after(project.getAuctionStartDate()) && currentDate.before(project.getAuctionEndDate())) {
-                projects.add(project);
-            }
-        }
-
-        return projects;
     }
 
     @PostMapping(value = "bid")
@@ -119,6 +102,46 @@ public class MarketplaceService {
         bidRepository.save(bid);
 
         return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/projects")
+    public List<Project> getAllOpenProjects() {
+
+        List<Project> projects = new ArrayList<>();
+
+        Date currentDate = new Date();
+
+        for (Project project : projectRepository.findAll()) {
+            if (currentDate.after(project.getAuctionStartDate()) && currentDate.before(project.getAuctionEndDate())) {
+                projects.add(project);
+            }
+        }
+
+        return projects;
+    }
+
+    @GetMapping(value = "/status")
+    public ResponseEntity getAuctionStatus(@RequestParam(value = "projectId") Long projectId) {
+
+        Project project = projectRepository.findOne(projectId);
+
+        if (project == null) {
+            throw new EntityNotFoundException("Project Not Found");
+        }
+
+        Date currentDate = new Date();
+
+        if (currentDate.before(project.getAuctionStartDate())) {
+            return ResponseEntity.ok().body("Auction is Not Active");
+        }
+
+        if (currentDate.after(project.getAuctionStartDate()) && currentDate.before(project.getAuctionEndDate())) {
+            return ResponseEntity.ok().body("Auction is still Active");
+        }
+
+        Buyer buyer = project.getBuyer();
+
+        return ResponseEntity.ok().body("Buyer " + buyer.getFirstName() + " won the auction for a Bid of " + project.getLowestBid());
     }
 
 }

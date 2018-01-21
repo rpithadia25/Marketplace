@@ -14,8 +14,6 @@ public class Seller implements User {
 
     private String lastName;
 
-    private String organization;
-
     private String email;
 
     private Seller() {}
@@ -48,14 +46,6 @@ public class Seller implements User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
     }
 
     public String getEmail() {
