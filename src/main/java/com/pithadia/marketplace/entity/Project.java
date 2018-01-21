@@ -2,9 +2,7 @@ package com.pithadia.marketplace.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Project {
@@ -106,6 +104,27 @@ public class Project {
 
     public void setSeller(Seller seller) {
         this.seller = seller;
+    }
+
+    public void placeBid(Bid bid) {
+
+        if (bids.size() == 0) {
+            minBidIndex = 0;
+            buyer = bid.getBuyer();
+        } else if (bids.get(minBidIndex).getBidAmount().compareTo(bid.getBidAmount()) > 0) {
+            minBidIndex++;
+            buyer = bid.getBuyer();
+        }
+        bids.add(bid);
+    }
+
+    public BigDecimal getLowestBid() {
+
+        if (bids == null || bids.size() == 0) {
+            return new BigDecimal(0);
+        }
+
+        return bids.get(minBidIndex).getBidAmount();
     }
 
     @Override
