@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +48,13 @@ public class MarketplaceService {
 
     @GetMapping(value = "/project")
     public Project getProject(@RequestParam(value = "projectId") Long projectId) {
-        return projectRepository.findOne(projectId);
+        Project project = projectRepository.findOne(projectId);
+
+        if (project == null) {
+            throw new EntityNotFoundException("Project Not Found");
+        }
+
+        return project;
     }
 
     @GetMapping(value = "/projects")
