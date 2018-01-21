@@ -1,11 +1,15 @@
 package com.pithadia.marketplace.service;
 
 import com.pithadia.marketplace.entity.Project;
+import com.pithadia.marketplace.entity.Seller;
 import com.pithadia.marketplace.repository.ProjectRepository;
+import com.pithadia.marketplace.repository.SellerRepository;
+import com.pithadia.marketplace.request.ProjectRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +21,28 @@ public class MarketplaceService {
     @Autowired
     ProjectRepository projectRepository;
 
+    @Autowired
+    private SellerRepository sellerRepository;
+
     @PostMapping(value = "project")
-    public void createProject() {
-        projectRepository.save(new Project("Sample Project", new Date(), new Date(), new BigDecimal(123),new BigDecimal(100), true));
+    public ResponseEntity<Project> createProject(@RequestBody ProjectRequest createProjectRequest) {
+        Seller seller = sellerRepository.findOne(createProjectRequest.getSellerId());
+
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Project project = createProjectRequest.getProject();
+
+        if (projectRepository.findOne(project.getId()) != null) {
+            return new ResponseEntity<>(projectRepository.findOne(project.getId()), HttpStatus.OK);
+        }
+
+        project.setSeller(seller);
+
+        projectRepository.save(project);
+
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @GetMapping(value = "/project")
@@ -32,8 +55,10 @@ public class MarketplaceService {
 
         List<Project> projects = new ArrayList<>();
 
+        Date currentDate = new Date();
+
         for (Project project : projectRepository.findAll()) {
-            if (project.getOpen()) {
+            if (currentDate.after(project.getAuctionStartDate()) && currentDate.before(project.getAuctionEndDate())) {
                 projects.add(project);
             }
         }

@@ -2,6 +2,7 @@ package com.pithadia.marketplace.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,24 +21,27 @@ public class Project {
 
     private BigDecimal maxBudget;
 
-    private BigDecimal minBid;
+    private Integer minBidIndex;
 
-    private Boolean isOpen;
+    @ManyToOne
+    private Buyer buyer;
 
-    @OneToMany(mappedBy = "project")
-    private List<Bid> bids;
+    @ManyToOne
+    private Seller seller;
 
-    // JPA need a private no arg constructor
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Bid> bids = new ArrayList<>();
+
+    // JPA needs a private no arg constructor
     private Project() {
     }
 
-    public Project(String description, Date auctionStartDate, Date auctionEndDate, BigDecimal maxBudget, BigDecimal minBid, Boolean isOpen) {
+    public Project(String description, Date auctionStartDate, Date auctionEndDate, BigDecimal maxBudget, Seller seller) {
         this.description = description;
         this.auctionStartDate = auctionStartDate;
         this.auctionEndDate = auctionEndDate;
         this.maxBudget = maxBudget;
-        this.minBid = minBid;
-        this.isOpen = isOpen;
+        this.seller = seller;
     }
 
     public Long getId() {
@@ -80,20 +84,28 @@ public class Project {
         this.maxBudget = maxBudget;
     }
 
-    public BigDecimal getMinBid() {
-        return minBid;
+    public Integer getMinBidIndex() {
+        return minBidIndex;
     }
 
-    public void setMinBid(BigDecimal minBid) {
-        this.minBid = minBid;
+    public void setMinBidIndex(Integer minBidIndex) {
+        this.minBidIndex = minBidIndex;
     }
 
-    public Boolean getOpen() {
-        return isOpen;
+    public Buyer getBuyer() {
+        return buyer;
     }
 
-    public void setOpen(Boolean open) {
-        isOpen = open;
+    public void setBuyer(Buyer buyer) {
+        this.buyer = buyer;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 
     @Override
@@ -104,8 +116,10 @@ public class Project {
                 ", auctionStartDate=" + auctionStartDate +
                 ", auctionEndDate=" + auctionEndDate +
                 ", maxBudget=" + maxBudget +
-                ", minBid=" + minBid +
-                ", isOpen=" + isOpen +
+                ", minBidIndex=" + minBidIndex +
+                ", buyer=" + buyer +
+                ", seller=" + seller +
+                ", bids=" + bids +
                 '}';
     }
 }
