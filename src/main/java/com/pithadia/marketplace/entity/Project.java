@@ -1,5 +1,8 @@
 package com.pithadia.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -13,8 +16,10 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date auctionStartDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date auctionEndDate;
 
     private BigDecimal maxBudget;

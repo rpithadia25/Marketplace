@@ -34,7 +34,7 @@ public class MarketplaceService {
     @Autowired
     private BidRepository bidRepository;
 
-    @PostMapping(value = "project")
+    @PostMapping(value = "/project")
     public ResponseEntity<Project> createProject(@RequestBody ProjectRequest createProjectRequest) {
 
         Seller seller = sellerRepository.findOne(createProjectRequest.getSellerId());
@@ -79,7 +79,7 @@ public class MarketplaceService {
         Project project = projectRepository.findOne(bidRequest.getProjectId());
 
         if (project == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new EntityNotFoundException("Project Not Found");
         }
 
         Date currentDate = new Date();
