@@ -5,11 +5,11 @@ This is a Marketplace REST API for Self Employed "Buyers" where they can Bid to 
 
 # Getting Started #
 
-Framework: 	Spring Boot.
+Framework:	Spring Boot.
 
-Database: 	H2 in memory database.
+Database:	H2 in memory database.
 
-IDE: 		IntelliJ.
+IDE:		IntelliJ.
 
 Please run the app using "MarketplaceApplication".
 
@@ -237,10 +237,10 @@ Ans: Approximately 5 hours
 2. Exercise Difficulty
 Ans: Moderate
 
-3. How did you feel about the exercise itself? (1 lowest, 10 highest—awesome way to assess coding ability)
+3. How did you feel about the exercise itself? (1 lowest, 10 highestï¿½awesome way to assess coding ability)
 Ans: 10 - I feel that a coding challenge is the best way to test a developer's skills.
 
-4. How do you feel about coding an exercise as a step in the interview process?  (1 lowest, 10 highest—awesome way to assess coding ability)
+4. How do you feel about coding an exercise as a step in the interview process?  (1 lowest, 10 highestï¿½awesome way to assess coding ability)
 Ans: 10
 
 5. What would you change in the exercise and/or process?
