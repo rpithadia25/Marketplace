@@ -7,7 +7,8 @@ import javax.persistence.Id;
 @Entity
 public class Buyer implements User {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String firstName;
@@ -16,7 +17,8 @@ public class Buyer implements User {
 
     private String email;
 
-    private Buyer() {}
+    private Buyer() {
+    }
 
     public Buyer(String firstName, String lastName, String email) {
         this.firstName = firstName;

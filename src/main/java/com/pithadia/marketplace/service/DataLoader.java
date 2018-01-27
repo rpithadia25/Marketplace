@@ -16,18 +16,18 @@ public class DataLoader {
     private BuyerRepository buyerRepository;
 
     @Autowired
-    public DataLoader(SellerRepository sellerRepository, BuyerRepository buyerRepository){
+    public DataLoader(SellerRepository sellerRepository, BuyerRepository buyerRepository) {
         this.sellerRepository = sellerRepository;
         this.buyerRepository = buyerRepository;
     }
 
     @PostConstruct
-    private void loadData(){
+    private void loadData() {
 
-        Seller seller = new Seller("Dan","Doe", "Intuit", "dan@mail.com");
+        Seller seller = new Seller("Dan", "Doe", "Intuit", "dan@mail.com");
         sellerRepository.save(seller);
 
-        Buyer buyer = new Buyer("John","Doe", "john@mail.com");
+        Buyer buyer = new Buyer("John", "Doe", "john@mail.com");
         buyerRepository.save(buyer);
     }
 }

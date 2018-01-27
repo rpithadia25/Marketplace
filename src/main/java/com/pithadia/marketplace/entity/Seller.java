@@ -7,7 +7,8 @@ import javax.persistence.Id;
 @Entity
 public class Seller implements User {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String firstName;
@@ -18,7 +19,8 @@ public class Seller implements User {
 
     private String email;
 
-    private Seller() {}
+    private Seller() {
+    }
 
     public Seller(String firstName, String lastName, String organization, String email) {
         this.firstName = firstName;

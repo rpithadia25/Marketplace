@@ -2,14 +2,18 @@ package com.pithadia.marketplace.entity;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 public class Bid {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private BigDecimal bidAmount;
@@ -20,7 +24,8 @@ public class Bid {
     @ManyToOne
     private Buyer buyer;
 
-    private Bid() {}
+    private Bid() {
+    }
 
     public Bid(BigDecimal bidAmount, Buyer buyer) {
         this.bidAmount = bidAmount;

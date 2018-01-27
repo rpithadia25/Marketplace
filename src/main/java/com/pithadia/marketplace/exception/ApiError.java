@@ -1,29 +1,33 @@
 package com.pithadia.marketplace.exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 public class ApiError {
 
     private HttpStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    private LocalDateTime timestamp;
     private String message;
     private List<String> errors;
 
     public ApiError() {
-        super();
+        timestamp = LocalDateTime.now();
     }
 
     public ApiError(final HttpStatus status, final String message, final List<String> errors) {
-        super();
+        this();
         this.status = status;
         this.message = message;
         this.errors = errors;
     }
 
     public ApiError(final HttpStatus status, final String message, final String error) {
-        super();
+        this();
         this.status = status;
         this.message = message;
         errors = Arrays.asList(error);
