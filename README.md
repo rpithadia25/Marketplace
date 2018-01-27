@@ -5,9 +5,11 @@ This is a Marketplace REST API for Self Employed "Buyers" where they can Bid to 
 
 # Getting Started #
 
-Framework: 	Spring Boot.
-Database: 	H2 in memory database.
-IDE: 		IntelliJ.
+Framework:	Spring Boot.
+
+Database:	H2 in memory database.
+
+IDE:		IntelliJ.
 
 Please run the app using "MarketplaceApplication".
 
@@ -21,9 +23,13 @@ Please use the following parameters to login on the H2 Console:
 ![picture](src/main/resources/H2Parameters.png)
 
 Driver Class: 	org.h2.Driver
+
 JDBC URL:		jdbc:h2:mem:marketplacedb
+
 Username:		sa
+
 Password:		{leave it blank}
+
 
 # Here are the supported actions / endpoints #
 
@@ -230,16 +236,21 @@ Here are some enhancements that I would have done if I would have put more time 
 # Questions from the Assignment #
 
 1. The time the exercise took (after dev environment is set up):
+
 Ans: Approximately 5 hours
 
 2. Exercise Difficulty
+
 Ans: Moderate
 
-3. How did you feel about the exercise itself? (1 lowest, 10 highest—awesome way to assess coding ability)
+3. How did you feel about the exercise itself? (1 lowest, 10 highest�awesome way to assess coding ability)
+
 Ans: 10 - I feel that a coding challenge is the best way to test a developer's skills.
 
-4. How do you feel about coding an exercise as a step in the interview process?  (1 lowest, 10 highest—awesome way to assess coding ability)
+4. How do you feel about coding an exercise as a step in the interview process?  (1 lowest, 10 highest�awesome way to assess coding ability)
+
 Ans: 10
 
 5. What would you change in the exercise and/or process?
+
 Ans: Nothing comes in mind.
