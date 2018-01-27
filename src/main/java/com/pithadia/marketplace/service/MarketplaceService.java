@@ -10,12 +10,14 @@ import com.pithadia.marketplace.repository.ProjectRepository;
 import com.pithadia.marketplace.repository.SellerRepository;
 import com.pithadia.marketplace.request.BidRequest;
 import com.pithadia.marketplace.request.ProjectRequest;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.xml.ws.Response;
 import java.util.*;
 
 @RestController
@@ -57,14 +59,15 @@ public class MarketplaceService {
     }
 
     @GetMapping(value = "/project")
-    public Project getProject(@RequestParam(value = "projectId") Long projectId) {
+    public ResponseEntity<Project> getProject(@RequestParam(value = "projectId") Long projectId) {
+
         Project project = projectRepository.findOne(projectId);
 
         if (project == null) {
             throw new EntityNotFoundException("Project Not Found");
         }
 
-        return project;
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @PostMapping(value = "bid")
@@ -79,7 +82,7 @@ public class MarketplaceService {
         Project project = projectRepository.findOne(bidRequest.getProjectId());
 
         if (project == null) {
-            throw new EntityNotFoundException("Project Not Found");
+            throw new EntityNotFoundException("Project with id: " + bidRequest.getProjectId() + " Not Found");
         }
 
         Date currentDate = new Date();
@@ -105,7 +108,7 @@ public class MarketplaceService {
     }
 
     @GetMapping(value = "/projects")
-    public List<Project> getAllOpenProjects() {
+    public ResponseEntity<List<Project>> getAllOpenProjects() {
 
         List<Project> projects = new ArrayList<>();
 
@@ -117,7 +120,11 @@ public class MarketplaceService {
             }
         }
 
-        return projects;
+        if (projects.isEmpty()) {
+            throw new EntityNotFoundException("No Open Projects Found");
+        }
+
+        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
     @GetMapping(value = "/status")
@@ -126,7 +133,7 @@ public class MarketplaceService {
         Project project = projectRepository.findOne(projectId);
 
         if (project == null) {
-            throw new EntityNotFoundException("Project Not Found");
+            throw new EntityNotFoundException("Project with id: " + projectId + " Not Found");
         }
 
         Date currentDate = new Date();
