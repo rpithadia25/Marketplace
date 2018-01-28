@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Project {
@@ -114,6 +112,10 @@ public class Project {
 
     public void setSeller(Seller seller) {
         this.seller = seller;
+    }
+
+    public List<Bid> getBids() {
+        return bids;
     }
 
     public void placeBid(Bid bid) {

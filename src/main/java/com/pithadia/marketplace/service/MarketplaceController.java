@@ -6,18 +6,17 @@ import com.pithadia.marketplace.entity.Project;
 import com.pithadia.marketplace.entity.Seller;
 import com.pithadia.marketplace.exception.EntityNotFoundException;
 import com.pithadia.marketplace.exception.UnsupportedOperationException;
-import com.pithadia.marketplace.repository.BidRepository;
-import com.pithadia.marketplace.repository.BuyerRepository;
+import com.pithadia.marketplace.exception.UserUnauthorizedException;
 import com.pithadia.marketplace.repository.SellerRepository;
-import com.pithadia.marketplace.request.BidRequest;
+import com.pithadia.marketplace.request.BidAddRequest;
+import com.pithadia.marketplace.request.BidDeleteRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/marketplace")
@@ -30,10 +29,10 @@ public class MarketplaceController {
     private SellerRepository sellerRepository;
 
     @Autowired
-    private BuyerRepository buyerRepository;
+    private BuyerService buyerService;
 
     @Autowired
-    private BidRepository bidRepository;
+    private BidService bidService;
 
     @PostMapping(value = "/project")
     public Project createProject(@RequestParam(value = "sellerId") Long sellerId, @RequestBody @Valid Project project) throws EntityNotFoundException {
@@ -46,7 +45,7 @@ public class MarketplaceController {
 
         project.setSeller(seller);
 
-        return projectService.createProject(project);
+        return projectService.saveProject(project);
     }
 
     @GetMapping(value = "/project")
@@ -54,20 +53,31 @@ public class MarketplaceController {
         return projectService.getProject(projectId);
     }
 
-    @PostMapping(value = "bid")
-    public ResponseEntity<Project> placeBid(@RequestBody BidRequest bidRequest) throws EntityNotFoundException, UnsupportedOperationException {
+    @GetMapping(value = "/projects")
+    public List<Project> getAllOpenProjects() throws EntityNotFoundException {
+        return projectService.getAllOpenProjects();
+    }
 
-        Buyer buyer = buyerRepository.findOne(bidRequest.getBuyerId());
+    @DeleteMapping(value = "/project")
+    public ResponseEntity deleteProject(@RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException {
+
+        Project project = projectService.getProject(projectId);
+
+        projectService.deleteProject(project);
+
+        return ResponseEntity.ok().body("Project Deleted!");
+    }
+
+    @PostMapping(value = "/bid")
+    public ResponseEntity<Project> placeBid(@RequestBody BidAddRequest bidAddRequest) throws EntityNotFoundException, UnsupportedOperationException {
+
+        Buyer buyer = buyerService.getBuyer(bidAddRequest.getBuyerId());
 
         if (buyer == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Project project = projectService.getProject(bidRequest.getProjectId());
-
-        if (project == null) {
-            throw new EntityNotFoundException(Project.class, "projectId: " + bidRequest.getProjectId().toString());
-        }
+        Project project = projectService.getProject(bidAddRequest.getProjectId());
 
         Date currentDate = new Date();
 
@@ -75,35 +85,55 @@ public class MarketplaceController {
             throw new UnsupportedOperationException(Project.class, "Project is Not Active");
         }
 
-        if (bidRequest.getAmount().compareTo(project.getMaxBudget()) > 0) {
+        if (bidAddRequest.getAmount().compareTo(project.getMaxBudget()) > 0) {
             throw new UnsupportedOperationException(Project.class, "Bid amount is greater than max budget!");
         }
 
-        Bid bid = new Bid(bidRequest.getAmount(), buyer);
+        Bid bid = new Bid(bidAddRequest.getAmount(), buyer);
 
         // Placing the Bid
         project.placeBid(bid);
 
-        projectService.createProject(project);
-
-        bidRepository.save(bid);
+        projectService.saveProject(project);
 
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/projects")
-    public List<Project> getAllOpenProjects() throws EntityNotFoundException {
-        return projectService.getAllOpenProjects();
+    @DeleteMapping(value = "/bid")
+    public ResponseEntity deleteBid(@RequestBody BidDeleteRequest bidDeleteRequest, @RequestParam(value = "buyerId") Long buyerId) throws EntityNotFoundException, UserUnauthorizedException {
+
+        Buyer buyer = buyerService.getBuyer(buyerId);
+
+        Bid bid = bidService.getBid(bidDeleteRequest.getBidId());
+
+        if (bid.getBuyer().getId() != buyer.getId()) {
+            throw new UserUnauthorizedException(Buyer.class, "Buyer with id : " + buyerId + " not authorized to delete bid with id : " + bid.getId());
+        }
+
+        Project project = projectService.getProject(bidDeleteRequest.getProjectId());
+
+        List<Bid> bids = project.getBids();
+
+        for (int i = 0; i < bids.size(); i++) {
+
+            if (bids.get(i).getId() == bidDeleteRequest.getBidId()) {
+                if (project.getMinBidIndex() == i) {
+                    bids.remove(bids.get(i));
+                    Collections.sort(bids, Comparator.comparing(Bid::getBidAmount));
+                    project.setBuyerWithMinBid(bids.get(0).getBuyer());
+                }
+                bidService.deleteBid(bid);
+                break;
+            }
+        }
+
+        return ResponseEntity.ok().body("Bid Deleted!");
     }
 
     @GetMapping(value = "/status")
     public ResponseEntity getAuctionStatus(@RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException {
 
         Project project = projectService.getProject(projectId);
-
-        if (project == null) {
-            throw new EntityNotFoundException(Project.class, "projectId: " + projectId.toString());
-        }
 
         Date currentDate = new Date();
 
@@ -119,5 +149,4 @@ public class MarketplaceController {
 
         return ResponseEntity.ok().body("Buyer " + buyer.getFirstName() + " won the auction for a Bid of " + project.getLowestBid());
     }
-
 }

@@ -1,5 +1,6 @@
 package com.pithadia.marketplace.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ public class Bid {
     private BigDecimal bidAmount;
 
     @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date bidDate;
 
     @ManyToOne
@@ -30,6 +32,7 @@ public class Bid {
     public Bid(BigDecimal bidAmount, Buyer buyer) {
         this.bidAmount = bidAmount;
         this.buyer = buyer;
+        this.bidDate = new Date();
     }
 
     public Long getId() {
