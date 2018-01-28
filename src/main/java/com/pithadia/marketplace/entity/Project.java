@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Project {
@@ -137,6 +139,21 @@ public class Project {
         }
 
         return bids.get(minBidIndex).getBidAmount();
+    }
+
+    public Boolean isAuctionActive() {
+
+        if (auctionStartDate == null || auctionEndDate == null) {
+            return false;
+        }
+
+        Date currentDate = new Date();
+
+        if (currentDate.after(auctionStartDate) && currentDate.before(auctionEndDate)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override

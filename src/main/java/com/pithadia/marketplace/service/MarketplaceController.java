@@ -16,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/marketplace")
@@ -100,7 +103,13 @@ public class MarketplaceController {
     }
 
     @DeleteMapping(value = "/bid")
-    public ResponseEntity deleteBid(@RequestBody BidDeleteRequest bidDeleteRequest, @RequestParam(value = "buyerId") Long buyerId) throws EntityNotFoundException, UserUnauthorizedException {
+    public ResponseEntity deleteBid(@RequestBody BidDeleteRequest bidDeleteRequest, @RequestParam(value = "buyerId") Long buyerId) throws EntityNotFoundException, UserUnauthorizedException, UnsupportedOperationException {
+
+        Project project = projectService.getProject(bidDeleteRequest.getProjectId());
+
+        if (!project.isAuctionActive()) {
+            throw new UnsupportedOperationException(Project.class, "Auction is not Active. Bid cannot be deleted.");
+        }
 
         Buyer buyer = buyerService.getBuyer(buyerId);
 
@@ -110,20 +119,26 @@ public class MarketplaceController {
             throw new UserUnauthorizedException(Buyer.class, "Buyer with id : " + buyerId + " not authorized to delete bid with id : " + bid.getId());
         }
 
-        Project project = projectService.getProject(bidDeleteRequest.getProjectId());
-
         List<Bid> bids = project.getBids();
 
-        for (int i = 0; i < bids.size(); i++) {
-
-            if (bids.get(i).getId() == bidDeleteRequest.getBidId()) {
-                if (project.getMinBidIndex() == i) {
-                    bids.remove(bids.get(i));
-                    Collections.sort(bids, Comparator.comparing(Bid::getBidAmount));
-                    project.setBuyerWithMinBid(bids.get(0).getBuyer());
+        if (bids.size() == 1) {
+            bids.remove(0);
+            bidService.deleteBid(bid);
+            project.setBuyerWithMinBid(null);
+            projectService.saveProject(project);
+        } else {
+            for (int i = 0; i < bids.size(); i++) {
+                Bid currentBid = bids.get(i);
+                if (currentBid.getId() == bidDeleteRequest.getBidId()) {
+                    bids.remove(i);
+                    bidService.deleteBid(bid);
+                    if (project.getMinBidIndex() == i) {
+                        Collections.sort(bids, Comparator.comparing(Bid::getBidAmount));
+                        project.setBuyerWithMinBid(bids.get(0).getBuyer());
+                        projectService.saveProject(project);
+                    }
+                    break;
                 }
-                bidService.deleteBid(bid);
-                break;
             }
         }
 
