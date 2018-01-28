@@ -121,7 +121,7 @@ public class MarketplaceController {
 
         List<Bid> bids = project.getBids();
 
-        if (bids.size() == 1) {
+        if (bids.size() == 1 && bids.get(0).getId() == bid.getId()) {
             bids.remove(0);
             bidService.deleteBid(bid);
             project.setBuyerWithMinBid(null);
@@ -149,6 +149,10 @@ public class MarketplaceController {
     public ResponseEntity getAuctionStatus(@RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException {
 
         Project project = projectService.getProject(projectId);
+
+        if (!project.isAuctionActive()) {
+            return ResponseEntity.ok().body("Project is not on Auction");
+        }
 
         Date currentDate = new Date();
 
