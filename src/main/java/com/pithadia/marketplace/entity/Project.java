@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Project {
@@ -101,6 +99,11 @@ public class Project {
     }
 
     public Buyer getBuyerWithMinBid() {
+
+        if (bids.size() == 0 || bids == null) {
+            buyerWithMinBid = null;
+        }
+
         return buyerWithMinBid;
     }
 
@@ -135,7 +138,7 @@ public class Project {
     public BigDecimal getLowestBid() {
 
         if (bids == null || bids.size() == 0) {
-            return new BigDecimal(0);
+            return new BigDecimal(Integer.MAX_VALUE);
         }
 
         return bids.get(minBidIndex).getBidAmount();
@@ -154,6 +157,20 @@ public class Project {
         }
 
         return false;
+    }
+
+    public void deleteBid(Bid bid) {
+
+        bids.remove(bid);
+
+        if (bids.size() == 0 || bids == null) {
+            minBidIndex = null;
+            buyerWithMinBid = null;
+        } else {
+            Collections.sort(bids, Comparator.comparing(Bid::getBidAmount));
+            buyerWithMinBid = bids.get(0).getBuyer();
+            minBidIndex = 0;
+        }
     }
 
     @Override

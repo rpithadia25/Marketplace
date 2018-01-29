@@ -40,13 +40,9 @@ public class ProjectService {
 
         List<Project> projects = new ArrayList<>();
 
-        Date currentDate = new Date();
-
         for (Project project : projectRepository.findAll()) {
-            if (project.getAuctionStartDate() != null && project.getAuctionEndDate() != null) {
-                if (currentDate.after(project.getAuctionStartDate()) && currentDate.before(project.getAuctionEndDate())) {
-                    projects.add(project);
-                }
+            if (project.isAuctionActive()) {
+                projects.add(project);
             }
         }
 
