@@ -41,7 +41,7 @@ public class ProjectService {
         List<Project> projects = new ArrayList<>();
 
         for (Project project : projectRepository.findAll()) {
-            if (project.isAuctionActive()) {
+            if (project.isActive()) {
                 projects.add(project);
             }
         }

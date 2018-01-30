@@ -1,5 +1,6 @@
 package com.pithadia.marketplace.request;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -12,6 +13,7 @@ public class BidAddRequest {
     private Long projectId;
 
     @NotNull
+    @Min(1)
     private BigDecimal amount;
 
     public Long getBuyerId() {

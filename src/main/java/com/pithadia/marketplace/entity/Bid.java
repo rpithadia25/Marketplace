@@ -39,10 +39,6 @@ public class Bid {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public BigDecimal getBidAmount() {
         return bidAmount;
     }

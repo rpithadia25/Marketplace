@@ -44,8 +44,8 @@ Password:		{leave it blank}
     						"project": {
     							"id": 1,
     							"description": "Sample Project",
-    							"auctionStartDate": "2018-01-21T16:00:00",
-    							"auctionEndDate": "2018-01-23T16:00:00",
+    							"startDate": "2018-01-21T16:00:00",
+    							"endDate": "2018-01-23T16:00:00",
     							"maxBudget": 123
     						}
 						}
@@ -55,8 +55,8 @@ Password:		{leave it blank}
 						{
     						"id": 1,
 						    "description": "Sample Project",
-						    "auctionStartDate": "2018-01-21",
-						    "auctionEndDate": "2018-01-23",
+						    "startDate": "2018-01-21",
+						    "endDate": "2018-01-23",
 						    "maxBudget": 123,
 						    "minBidIndex": null,
 						    "buyerWithMinBid": null,
@@ -86,8 +86,8 @@ Password:		{leave it blank}
 						{
 						    "id": 1,
 						    "description": "Sample Project",
-						    "auctionStartDate": "2018-01-21",
-						    "auctionEndDate": "2018-01-23",
+						    "startDate": "2018-01-21",
+						    "endDate": "2018-01-23",
 						    "maxBudget": 123,
 						    "minBidIndex": null,
 						    "buyerWithMinBid": null,
@@ -131,8 +131,8 @@ Password:		{leave it blank}
 						{
 						    "id": 1,
 						    "description": "Sample Project",
-						    "auctionStartDate": "2018-01-21",
-        					"auctionEndDate": "2018-01-23",
+						    "startDate": "2018-01-21",
+        					"endDate": "2018-01-23",
 						    "maxBudget": 123,
 						    "minBidIndex": 0,
 						    "buyer": {
@@ -177,8 +177,8 @@ Password:		{leave it blank}
 						    {
 						        "id": 1,
 						        "description": "Sample Project",
-						        "auctionStartDate": "2018-01-21",
-        						"auctionEndDate": "2018-01-23",
+						        "startDate": "2018-01-21",
+        						"endDate": "2018-01-23",
 						        "maxBudget": 123,
 						        "minBidIndex": null,
 						        "buyer": null,

@@ -30,10 +30,6 @@ public class Buyer implements User {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -56,6 +52,10 @@ public class Buyer implements User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     @Override

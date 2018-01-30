@@ -1,11 +1,13 @@
 package com.pithadia.marketplace.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Entity
 public class Project {
@@ -18,13 +20,8 @@ public class Project {
     @NotNull
     private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private Date auctionStartDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private Date auctionEndDate;
-
     @NotNull
+    @Min(1)
     private BigDecimal maxBudget;
 
     private Integer minBidIndex;
@@ -35,17 +32,21 @@ public class Project {
     @ManyToOne
     private Seller seller;
 
+    @OneToOne(targetEntity = Auction.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "auctionId", referencedColumnName = "id")
+    private Auction auction;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bid> bids = new ArrayList<>();
+
+    private Boolean isActive = false;
 
     // JPA needs a private no arg constructor
     private Project() {
     }
 
-    public Project(String description, Date auctionStartDate, Date auctionEndDate, BigDecimal maxBudget, Seller seller) {
+    public Project(String description, BigDecimal maxBudget, Seller seller) {
         this.description = description;
-        this.auctionStartDate = auctionStartDate;
-        this.auctionEndDate = auctionEndDate;
         this.maxBudget = maxBudget;
         this.seller = seller;
     }
@@ -54,32 +55,12 @@ public class Project {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getAuctionStartDate() {
-        return auctionStartDate;
-    }
-
-    public void setAuctionStartDate(Date auctionStartDate) {
-        this.auctionStartDate = auctionStartDate;
-    }
-
-    public Date getAuctionEndDate() {
-        return auctionEndDate;
-    }
-
-    public void setAuctionEndDate(Date auctionEndDate) {
-        this.auctionEndDate = auctionEndDate;
     }
 
     public BigDecimal getMaxBudget() {
@@ -123,6 +104,33 @@ public class Project {
         return bids;
     }
 
+    public Boolean isActive() {
+        if (auction == null) {
+            return false;
+        }
+        return auction.isActive();
+    }
+
+    public void setActive(Boolean status) {
+        isActive = status;
+    }
+
+    public Auction getAuction() {
+        return auction;
+    }
+
+    public void setAuction(Auction auction) {
+        if (auction != null) {
+            this.buyerWithMinBid = null;
+            this.bids.clear();
+        }
+        this.auction = auction;
+    }
+
+    public Integer getNumberOfBids() {
+        return bids.size();
+    }
+
     public void placeBid(Bid bid) {
 
         if (bids.size() == 0) {
@@ -144,21 +152,6 @@ public class Project {
         return bids.get(minBidIndex).getBidAmount();
     }
 
-    public Boolean isAuctionActive() {
-
-        if (auctionStartDate == null || auctionEndDate == null) {
-            return false;
-        }
-
-        Date currentDate = new Date();
-
-        if (currentDate.after(auctionStartDate) && currentDate.before(auctionEndDate)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public void deleteBid(Bid bid) {
 
         bids.remove(bid);
@@ -178,8 +171,6 @@ public class Project {
         return "Project{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
-                ", auctionStartDate=" + auctionStartDate +
-                ", auctionEndDate=" + auctionEndDate +
                 ", maxBudget=" + maxBudget +
                 ", minBidIndex=" + minBidIndex +
                 ", buyerWithMinBid=" + buyerWithMinBid +
