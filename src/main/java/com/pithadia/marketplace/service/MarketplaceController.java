@@ -34,7 +34,7 @@ public class MarketplaceController {
     @Autowired
     private AuctionService auctionService;
 
-    @PostMapping(value = "/project")
+    @PostMapping(value = "/projects")
     public Project createProject(@RequestParam(value = "sellerId") Long sellerId, @RequestBody @Valid Project project) throws EntityNotFoundException {
 
         Seller seller = sellerService.getSeller(sellerId);
@@ -48,13 +48,13 @@ public class MarketplaceController {
         return projectService.saveProject(project);
     }
 
-    @GetMapping(value = "/project")
-    public Project getProject(@RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException {
+    @GetMapping(value = "/projects/{projectId}")
+    public Project getProject(@PathVariable(value = "projectId") Long projectId) throws EntityNotFoundException {
         return projectService.getProject(projectId);
     }
 
-    @DeleteMapping(value = "/project")
-    public ResponseEntity deleteProject(@RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException, UnsupportedOperationException {
+    @DeleteMapping(value = "/projects/{projectId}")
+    public ResponseEntity deleteProject(@PathVariable(value = "projectId") Long projectId) throws EntityNotFoundException {
 
         Project project = projectService.getProject(projectId);
 
@@ -68,7 +68,7 @@ public class MarketplaceController {
         return projectService.getAllOpenProjects();
     }
 
-    @PostMapping(value = "/bid")
+    @PostMapping(value = "/bids")
     public ResponseEntity<Project> placeBid(@RequestBody @Valid BidAddRequest bidAddRequest) throws EntityNotFoundException, UnsupportedOperationException {
 
         Buyer buyer = buyerService.getBuyer(bidAddRequest.getBuyerId());
@@ -101,7 +101,7 @@ public class MarketplaceController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/bid")
+    @DeleteMapping(value = "/bids")
     public ResponseEntity deleteBid(@RequestBody BidDeleteRequest bidDeleteRequest, @RequestParam(value = "buyerId") Long buyerId) throws EntityNotFoundException, UserUnauthorizedException, UnsupportedOperationException {
 
         Project project = projectService.getProject(bidDeleteRequest.getProjectId());
@@ -131,7 +131,7 @@ public class MarketplaceController {
         return ResponseEntity.ok().body("Bid Deleted!");
     }
 
-    @PostMapping(value = "/auction")
+    @PostMapping(value = "/auctions")
     public Project startAuction(@RequestParam(value = "sellerId") Long sellerId, @RequestParam(value = "projectId") Long projectId, @RequestBody @Valid Auction auction) throws EntityNotFoundException, UserUnauthorizedException, UnsupportedOperationException {
 
         Seller seller = sellerService.getSeller(sellerId);
@@ -161,7 +161,7 @@ public class MarketplaceController {
         return projectService.saveProject(project);
     }
 
-    @DeleteMapping(value = "/auction")
+    @DeleteMapping(value = "/auctions")
     public ResponseEntity stopAuction(@RequestParam(value = "sellerId") Long sellerId, @RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException, UserUnauthorizedException, UnsupportedOperationException {
 
         Seller seller = sellerService.getSeller(sellerId);
@@ -193,7 +193,7 @@ public class MarketplaceController {
         return ResponseEntity.ok().body("Auction Stopped");
     }
 
-    @GetMapping(value = "/auction/status")
+    @GetMapping(value = "/auctions/status")
     public ResponseEntity getAuctionStatus(@RequestParam(value = "projectId") Long projectId) throws EntityNotFoundException {
 
         Date currentDate = new Date();
