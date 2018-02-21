@@ -218,39 +218,3 @@ Password:		{leave it blank}
 				The service returns a 200 OK along with information about who won the auction along with the bid amount.
 				E.g. : "Buyer John won the auction for a Bid of 100.00"
 
-# Future Enhancements #
-
-I was not able to devote as much time as I wanted to the assignment.
-Here are some enhancements that I would have done if I would have put more time on it.
-
-1. Add ability to cancel a Bid.
-	Currently the service only allows us to place a bid on a project. In a real scenario however, cancelling a Bid is also good to have.
-
-2. Implement automated approach to decide Auction winner:
-	As of now the winner is found out by calling the /status endpoint which determines (on each call) whether the request is issued before, during or after the auction.
-	An ideal approach to this would have been to implement a Timer, or better use an Observable to notify the user who has won the auction.
-	Also, In case there are no Bids during the Auction, the end time of the Auction should be extended by a pre defined duration.
-
-3. Better Response Messages.
-
-# Questions from the Assignment #
-
-1. The time the exercise took (after dev environment is set up):
-
-Ans: Approximately 5 hours
-
-2. Exercise Difficulty
-
-Ans: Moderate
-
-3. How did you feel about the exercise itself? (1 lowest, 10 highest�awesome way to assess coding ability)
-
-Ans: 10 - I feel that a coding challenge is the best way to test a developer's skills.
-
-4. How do you feel about coding an exercise as a step in the interview process?  (1 lowest, 10 highest�awesome way to assess coding ability)
-
-Ans: 10
-
-5. What would you change in the exercise and/or process?
-
-Ans: Nothing comes in mind.
