@@ -64,7 +64,7 @@ Password:		{leave it blank}
 						        "id": 1,
 						        "firstName": "Dan",
 						        "lastName": "Doe",
-						        "organization": "Intuit",
+						        "organization": "Wayne Enterprise",
 						        "email": "dan@mail.com"
 						    },
 						    "lowestBid": 0
@@ -95,7 +95,7 @@ Password:		{leave it blank}
 						        "id": 1,
 						        "firstName": "Dan",
 						        "lastName": "Doe",
-						        "organization": "Intuit",
+						        "organization": "Wayne Enterprise",
 						        "email": "dan@mail.com"
 						    },
 						    "lowestBid": 0
@@ -145,7 +145,7 @@ Password:		{leave it blank}
 						        "id": 1,
 						        "firstName": "Dan",
 						        "lastName": "Doe",
-						        "organization": "Intuit",
+						        "organization": "Wayne Enterprise",
 						        "email": "dan@mail.com"
 						    },
 						    "lowestBid": 100
@@ -186,7 +186,7 @@ Password:		{leave it blank}
 						            "id": 1,
 						            "firstName": "Dan",
 						            "lastName": "Doe",
-						            "organization": "Intuit",
+						            "organization": "Wayne Enterprise",
 						            "email": "dan@mail.com"
 						        },
 						        "lowestBid": 0
