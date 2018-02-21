@@ -24,10 +24,10 @@ public class DataLoader {
     @PostConstruct
     private void loadData() {
 
-        Seller seller1 = new Seller("Jane", "Doe", "Intuit", "dan@mail.com");
+        Seller seller1 = new Seller("Jane", "Doe", "Wayne Enterprise", "dan@mail.com");
         sellerRepository.save(seller1);
 
-        Seller seller2 = new Seller("Dan", "Doe", "Intuit", "dan@mail.com");
+        Seller seller2 = new Seller("Dan", "Doe", "Wayne Enterprise", "dan@mail.com");
         sellerRepository.save(seller2);
 
         Buyer buyer1 = new Buyer("John", "Doe", "john@mail.com");
